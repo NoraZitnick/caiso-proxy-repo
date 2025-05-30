@@ -1,2 +1,2 @@
 # caiso-proxy-repo
-Server to get data from caiso
+A simple Node.js server that fetches CAISO energy prediction CSV data and serves it with CORS enabled, so frontend apps can access it.
