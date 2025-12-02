@@ -26,10 +26,6 @@ app.get('/caiso-csv', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 const webpush = require("web-push");
 
 app.use(express.json());
@@ -112,7 +108,6 @@ app.post("/notify-all", async (req, res) => {
 
 // -------------------------------
 
-app.listen(PORT, () => console.log("Server running on port", PORT));
 
 
 schedule.scheduleJob("0 18 * * *", () => {
@@ -121,3 +116,5 @@ schedule.scheduleJob("0 18 * * *", () => {
     JSON.stringify({ title: "Reminder", body: "Run dishwasher now!" })
   );
 });
+
+app.listen(PORT, () => console.log("Server running on port", PORT));
