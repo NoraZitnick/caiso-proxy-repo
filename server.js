@@ -1,10 +1,12 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const schedule = require("node-schedule");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 app.use(cors());
+
 
 app.get('/caiso-csv', async (req, res) => {
   try {
@@ -112,7 +114,6 @@ app.post("/notify-all", async (req, res) => {
 
 app.listen(PORT, () => console.log("Server running on port", PORT));
 
-const schedule = require("node-schedule");
 
 schedule.scheduleJob("0 18 * * *", () => {
   webpush.sendNotification(
