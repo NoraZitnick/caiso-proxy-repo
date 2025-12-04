@@ -60,7 +60,7 @@ app.post("/subscribe", (req, res) => {
   if (!userId || !subscription) {
     return res.status(400).json({ error: "Missing userId or subscription" });
   }
-
+  console.log("New subscription for user");
   subscriptions[userId] = subscription;
 
   res.status(201).json({ message: "Subscribed successfully" });
@@ -89,6 +89,7 @@ app.post("/notify", async (req, res) => {
 
 app.post("/notify-time", async (req, res) => {
   const { userId, title, body, time } = req.body;
+  console.log("Scheduling notification for user at", time);
   if (!subscriptions[userId]) {
     return res.status(404).json({ error: "User not subscribed" });
   }
