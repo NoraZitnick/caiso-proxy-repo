@@ -2,6 +2,7 @@ const express = require('express');
 const fetch = require('node-fetch');
 const schedule = require("node-schedule");
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
@@ -86,36 +87,33 @@ app.post("/notify", async (req, res) => {
   }
 });
 
-// -------------------------------
-// 5. --- OPTIONAL: BROADCAST TO ALL USERS ---
-// -------------------------------
-app.post("/notify-all", async (req, res) => {
-  const { title, body } = req.body;
-  const payload = JSON.stringify({ title, body });
-
-  const results = [];
-
-  for (const [userId, subscription] of Object.entries(subscriptions)) {
-    try {
-      await webpush.sendNotification(subscription, payload);
-      results.push({ userId, status: "sent" });
-    } catch {
-      results.push({ userId, status: "failed" });
-    }
+app.post("/notify-time", async (req, res) => {
+  const { userId, title, body, time } = req.body;
+  if (!subscriptions[userId]) {
+    return res.status(404).json({ error: "User not subscribed" });
   }
-
-  res.json(results);
+  const payload = JSON.stringify({ title, body });
+  try {
+    schedule.scheduleJob(time, () => {
+      webpush.sendNotification(
+        subscriptions[userId],
+        payload
+      ).catch((err) => {
+        // Log errors from the scheduled send so they don't crash the scheduler
+        console.error("Push error (scheduled):", err);
+      });
+    });
+    res.status(201).json({ message: "Notification scheduled" });
+  } catch (err) {
+    console.error("Push error:", err);
+    res.status(500).json({ error: "Failed to schedule push" });
+  }
 });
 
 // -------------------------------
 
 
 
-schedule.scheduleJob("0 18 * * *", () => {
-  webpush.sendNotification(
-    subscriptions["nora123"],
-    JSON.stringify({ title: "Reminder", body: "Run dishwasher now!" })
-  );
-});
+
 
 app.listen(PORT, () => console.log("Server running on port", PORT));
