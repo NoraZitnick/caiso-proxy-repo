@@ -9,6 +9,9 @@ const cors = require('cors');
 app.use(cors());
 app.options("*", cors());
 
+app.get("/", (req, res) => {
+  res.send("OK");
+});
 
 app.get('/caiso-csv', async (req, res) => {
   try {
