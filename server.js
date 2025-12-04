@@ -89,7 +89,7 @@ app.post("/notify", async (req, res) => {
 
 app.post("/notify-time", async (req, res) => {
   const { userId, title, body, time } = req.body;
-  console.log("Scheduling notification for user at", time);
+  console.log("Scheduling notification for user at", time.toString());
   if (!subscriptions[userId]) {
     return res.status(404).json({ error: "User not subscribed" });
   }
